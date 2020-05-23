@@ -12,11 +12,6 @@ from google.protobuf.timestamp_pb2 import Timestamp
 
 #install xlwt,xlrd,xlutils, protobuf3
 
-#form = sg.FlexForm('Форма')
-
-#layout = [[sg.Text('Введите eui датчика'), sg.InputText(), sg.Submit()]]
-#window = sg.Window(layout)
-#button, values = f
 
 def proto(ts1, ts2, eui):
     msg = iiot_device_pb2.DeviceHistoryRequest()
@@ -38,18 +33,17 @@ def getDevices():
     print("Response: " + str(response))
 
 
-def getHist():
+def getHist(ts1, ts2, deveui):
     channel = getChannel()
     stub = iiot_device_pb2_grpc.IotDeviceStub(channel)
-    ts1 = Timestamp()
-    ts1.FromDatetime(datetime(2020, 4, 20, 0, 0))#Дата от(год, месяц, день, час, минута)
-    ts2 = Timestamp()
-    ts2.FromDatetime(datetime(2020, 5, 20, 1, 0))#Дата до(год, месяц, день, час, минута)
-    deveui = '3135323976376f01' #eui датчика, есть https://127.0.0.1/sensor-list столбец DevEUI
-    #response = stub.getDeviceHistory(from_ts = ts1, to_ts = ts2, )
-    response = stub.getDeviceHistory(proto(ts1, ts2, deveui))
-    #print("Response: " + str(response.body.sensors[0].history[0].value))
-    return response
+    #ts1 = Timestamp()
+    #ts1.FromDatetime(datetime(2020, 4, 20, 0, 0))#Дата от(год, месяц, день, час, минута)
+    #ts2 = Timestamp()
+    #ts2.FromDatetime(datetime(2020, 5, 20, 1, 0))#Дата до(год, месяц, день, час, минута)
+    #deveui = '3135323976376f01' #eui датчика, есть https://127.0.0.1/sensor-list столбец DevEUI
+    
+    return stub.getDeviceHistory(proto(ts1, ts2, deveui))
+     
 
 
 
@@ -70,15 +64,18 @@ def toExcel(date, value):
     wb.save('res.xls')
     print('added')
 
+
+
+def start(ts1, ts2, deveui):
+    history = getHist(ts1, ts2, deveui).body.sensors[0].history
+    newExcel()
+    for i in history:
+        tmp = str(i.value).split()[1]
+        toExcel(str(i.ts.ToDatetime()), str(tmp))
+
 #ToDatetime
-history = getHist().body.sensors[0].history
-print(len(history))
-newExcel()
-for i in history:
-    print(str(i))
-    tmp = str(i.value).split()[1]
-    toExcel(str(i.ts.ToDatetime()), str(tmp))
-    #toExcel(i.ts.ToDatetime(), i.value)
-#getDevices()
+#history = getHist().body.sensors[0].history
+
+
 
 
