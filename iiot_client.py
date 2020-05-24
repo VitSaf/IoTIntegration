@@ -62,19 +62,29 @@ def toExcel(date, value):
     sheet.write(r ,0 ,date)
     sheet.write(r, 1, value)
     wb.save('res.xls')
-    print('added')
+
+def toExcelOpt(history):
+    rb = xlrd.open_workbook('res.xls')
+    r_sheet = rb.sheet_by_index(0)
+    r = r_sheet.nrows
+    wb = copy(rb)
+    sheet = wb.get_sheet(0)
+    for i in history:
+        sheet.write(r ,0 ,str(i.ts.ToDatetime()))
+        sheet.write(r, 1, str(str(i.value).split()[1]))
+        r += 1
+    wb.save('res.xls')
 
 
 
 def start(ts1, ts2, deveui):
     history = getHist(ts1, ts2, deveui).body.sensors[0].history
     newExcel()
+    #toExcelOpt(history)
+    #Протестировать работоспособность toExcelOpt на сервере,если работает, то убрать цикл и расскоментировать вызов выше
     for i in history:
         tmp = str(i.value).split()[1]
         toExcel(str(i.ts.ToDatetime()), str(tmp))
-
-#ToDatetime
-#history = getHist().body.sensors[0].history
 
 
 
