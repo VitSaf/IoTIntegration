@@ -9,11 +9,15 @@ import iiot_client as cli
 
 def prepare_start(event):
 	tmp_date = datetime.strptime(from_ts.get(), '%Y-%m-%d %H:%M')
+	print(str(tmp_date))
 	ts1 = Timestamp()
 	ts1.FromDatetime(tmp_date)
-	tmp_date = datetime.strptime(to_ts.get(), '%Y-%m-%d %H:%M')
+	print(str(ts1))
+	tmp_date1 = datetime.strptime(to_ts.get(), '%Y-%m-%d %H:%M')
+	print(str(tmp_date1))
 	ts2 = Timestamp()
-	ts2.FromDatetime(tmp_date)
+	ts2.FromDatetime(tmp_date1)
+	print(str(ts2))
 	deveui = eui.get()
 	print("cli.start")
 	cli.start(ts1, ts2, deveui)

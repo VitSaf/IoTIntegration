@@ -80,11 +80,11 @@ def toExcelOpt(history):
 def start(ts1, ts2, deveui):
     history = getHist(ts1, ts2, deveui).body.sensors[0].history
     newExcel()
-    #toExcelOpt(history)
+    toExcelOpt(history)
     #Протестировать работоспособность toExcelOpt на сервере,если работает, то убрать цикл и расскоментировать вызов выше
-    for i in history:
-        tmp = str(i.value).split()[1]
-        toExcel(str(i.ts.ToDatetime()), str(tmp))
+    #for i in history:
+     #   tmp = str(i.value).split()[1]
+      #  toExcel(str(i.ts.ToDatetime()), str(tmp))
 
 
 
