@@ -2,6 +2,7 @@ import tkinter as tk
 from datetime import datetime
 from google.protobuf.timestamp_pb2 import Timestamp
 import iiot_client as cli
+import influxDBMngr as db
 #нет datetime пикера
 #Вводим строкой и парсим в datetime (есть готовая функция кажись)
 
@@ -22,6 +23,9 @@ def prepare_start(event):
 	print("cli.start")
 	cli.start(ts1, ts2, deveui)
 
+def get_t(event):
+	db.start_t()
+
 root = tk.Tk()
 dates_frame = tk.Frame(root)
 eui_label = tk.Label(root, text = 'Введите eui')
@@ -30,9 +34,12 @@ ts_label = tk.Label(root, text = 'Введите за какой промежу�
 from_ts = tk.Entry(dates_frame, width = 15)
 to_ts = tk.Entry(dates_frame, width = 15)
 btn = tk.Button(root, text = 'Выгрузить')#btn вызывает cli.start(ts1, ts2, deveui)
+#gas_btn = tk.Button(root, text = 'Выгрузить данные от газоанализаторов(influxDB)')
+t_btn   = tk.Button(root, text = 'Выгрузить данные по температуре изinfluxDB')
 #string to datetime 
 #https://stackabuse.com/converting-strings-to-datetime-in-python/
 btn.bind('<Button-1>', prepare_start)
+t_btn.bind('<Button-1', get_t)
 
 eui_label.pack()
 eui.pack()
@@ -41,4 +48,5 @@ dates_frame.pack()
 from_ts.pack(side = tk.LEFT)
 to_ts.pack(side = tk.RIGHT)
 btn.pack()
+t_btn.pack()
 root.mainloop()
