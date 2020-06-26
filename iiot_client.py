@@ -9,6 +9,7 @@ import xlrd
 from xlutils.copy import copy
 from datetime import datetime
 from google.protobuf.timestamp_pb2 import Timestamp
+import pandas as pd
 
 #install xlwt,xlrd,xlutils, protobuf3
 
@@ -81,11 +82,13 @@ def start(ts1, ts2, deveui):
     history = getHist(ts1, ts2, deveui).body.sensors[0].history
     newExcel()
     toExcelOpt(history)
-    #Протестировать работоспособность toExcelOpt на сервере,если работает, то убрать цикл и расскоментировать вызов выше
-    #for i in history:
-     #   tmp = str(i.value).split()[1]
-      #  toExcel(str(i.ts.ToDatetime()), str(tmp))
 
+def startWithPD(ts1, ts2, deveui):
+	history = getHist(ts1, ts2, deveui).body.sensors[0].history
+	RES = []
+	for i in history:
+		RES.append({'Дата': i.ts.ToDatetime(), 'Значение': str(i.value).split()[1]})
+	pd.DataFrame(RES).to_excel('Выгрузка')
 
 
 
